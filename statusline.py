@@ -56,6 +56,13 @@ def diff(data):
     return f"+{added}/-{removed}"
 
 
+def duration(data):
+    ms = (data.get("cost") or {}).get("total_duration_ms", 0) or 0
+    minutes = int(ms // 60000)
+    h, m = divmod(minutes, 60)
+    return f"{h}h{m}m" if h else f"{m}m"
+
+
 def main():
     data = json.load(sys.stdin)
 

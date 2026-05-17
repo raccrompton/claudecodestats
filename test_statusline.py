@@ -38,6 +38,15 @@ def test_diff():
     assert statusline.diff({}) == "+0/-0"
 
 
+def test_duration():
+    assert statusline.duration({"cost": {"total_duration_ms": 12 * 60000}}) == "12m"
+    assert statusline.duration({"cost": {"total_duration_ms": 64 * 60000}}) == "1h4m"
+    # Sub-minute rounds down to 0m.
+    assert statusline.duration({"cost": {"total_duration_ms": 5000}}) == "0m"
+    assert statusline.duration({"cost": {}}) == "0m"
+    assert statusline.duration({}) == "0m"
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):
