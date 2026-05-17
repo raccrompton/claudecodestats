@@ -11,6 +11,13 @@ def pct(value):
     return f"{value:.0f}%" if isinstance(value, (int, float)) else "-"
 
 
+def _int(value):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return 0
+
+
 def _workdir(data):
     ws = data.get("workspace") or {}
     return ws.get("current_dir") or data.get("cwd")
@@ -18,7 +25,9 @@ def _workdir(data):
 
 def repo(data):
     d = _workdir(data)
-    return os.path.basename(d.rstrip("/")) if d else "-"
+    if not d:
+        return "-"
+    return os.path.basename(d.rstrip("/")) or "-"
 
 
 def branch(data):
@@ -51,14 +60,14 @@ def model(data):
 
 def diff(data):
     cost = data.get("cost") or {}
-    added = cost.get("total_lines_added", 0) or 0
-    removed = cost.get("total_lines_removed", 0) or 0
+    added = _int(cost.get("total_lines_added"))
+    removed = _int(cost.get("total_lines_removed"))
     return f"+{added}/-{removed}"
 
 
 def duration(data):
-    ms = (data.get("cost") or {}).get("total_duration_ms", 0) or 0
-    minutes = int(ms // 60000)
+    ms = _int((data.get("cost") or {}).get("total_duration_ms"))
+    minutes = ms // 60000
     h, m = divmod(minutes, 60)
     return f"{h}h{m}m" if h else f"{m}m"
 

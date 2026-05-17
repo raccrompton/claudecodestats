@@ -85,6 +85,20 @@ def test_main_end_to_end():
     assert fields[8] == "wk:11%", fields
 
 
+def test_diff_non_numeric():
+    # Malformed payload must not produce garbage.
+    assert statusline.diff({"cost": {"total_lines_added": "x", "total_lines_removed": None}}) == "+0/-0"
+
+
+def test_duration_non_numeric():
+    # Malformed payload must not raise.
+    assert statusline.duration({"cost": {"total_duration_ms": "oops"}}) == "0m"
+
+
+def test_repo_root_path():
+    assert statusline.repo({"cwd": "/"}) == "-"
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):
