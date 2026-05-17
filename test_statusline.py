@@ -22,6 +22,16 @@ def test_branch():
     assert here != "-" and here != ""
 
 
+def test_model():
+    assert statusline.model({"model": {"display_name": "Claude Opus 4.7"}}) == "opus-4.7"
+    assert statusline.model({"model": {"display_name": "Claude Sonnet 4.6"}}) == "sonnet-4.6"
+    # Unparseable -> raw display name returned verbatim.
+    assert statusline.model({"model": {"display_name": "Mystery Model"}}) == "Mystery Model"
+    # Missing -> fallback.
+    assert statusline.model({}) == "-"
+    assert statusline.model({"model": {}}) == "-"
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):

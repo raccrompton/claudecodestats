@@ -2,6 +2,7 @@
 """Compact Claude Code status line: cost, context, and rate-limit usage."""
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -34,6 +35,18 @@ def branch(data):
     if result.returncode != 0:
         return "-"
     return result.stdout.strip() or "-"
+
+
+def model(data):
+    name = (data.get("model") or {}).get("display_name")
+    if not name:
+        return "-"
+    low = name.lower()
+    tier = next((t for t in ("opus", "sonnet", "haiku") if t in low), None)
+    version = re.search(r"\d+\.\d+", low)
+    if tier and version:
+        return f"{tier}-{version.group()}"
+    return name
 
 
 def main():
