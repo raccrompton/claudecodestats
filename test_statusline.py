@@ -32,6 +32,12 @@ def test_model():
     assert statusline.model({"model": {}}) == "-"
 
 
+def test_diff():
+    assert statusline.diff({"cost": {"total_lines_added": 120, "total_lines_removed": 30}}) == "+120/-30"
+    assert statusline.diff({"cost": {}}) == "+0/-0"
+    assert statusline.diff({}) == "+0/-0"
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):

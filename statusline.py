@@ -49,6 +49,13 @@ def model(data):
     return name
 
 
+def diff(data):
+    cost = data.get("cost") or {}
+    added = cost.get("total_lines_added", 0) or 0
+    removed = cost.get("total_lines_removed", 0) or 0
+    return f"+{added}/-{removed}"
+
+
 def main():
     data = json.load(sys.stdin)
 
