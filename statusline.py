@@ -1,11 +1,22 @@
 #!/usr/bin/env python3
 """Compact Claude Code status line: cost, context, and rate-limit usage."""
 import json
+import os
 import sys
 
 
 def pct(value):
     return f"{value:.0f}%" if isinstance(value, (int, float)) else "-"
+
+
+def _workdir(data):
+    ws = data.get("workspace") or {}
+    return ws.get("current_dir") or data.get("cwd")
+
+
+def repo(data):
+    d = _workdir(data)
+    return os.path.basename(d.rstrip("/")) if d else "-"
 
 
 def main():
