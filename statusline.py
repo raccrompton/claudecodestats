@@ -18,8 +18,8 @@ def main():
     seven_day = (limits.get("seven_day") or {}).get("used_percentage")
 
     parts = [
-        f"${cost:.2f}",
-        f"{ctx}%",
+        f"cost:${cost:.2f}",
+        f"ctx:{ctx}%",
         f"5h:{pct(five_hour)}",
         f"wk:{pct(seven_day)}",
     ]

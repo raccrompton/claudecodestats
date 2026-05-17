@@ -3,13 +3,13 @@
 A tiny, no-dependencies status line for [Claude Code](https://claude.com/claude-code) that shows the four numbers I actually care about during a session:
 
 ```
-$0.42  37%  5h:24%  wk:11%
+cost:$0.42  ctx:37%  5h:24%  wk:11%
 ```
 
 | Field | Meaning |
 | --- | --- |
-| `$0.42` | Total cost of the current session, USD |
-| `37%` | Context window used |
+| `cost:$0.42` | Total cost of the current session, USD |
+| `ctx:37%` | Context window used |
 | `5h:24%` | Share of the rolling 5-hour rate limit consumed |
 | `wk:11%` | Share of the rolling 7-day rate limit consumed |
 
