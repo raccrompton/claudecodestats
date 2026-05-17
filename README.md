@@ -45,11 +45,11 @@ Rate-limit fields fall back to `-` when Claude Code hasn't reported them yet (e.
 
 ## How it works
 
-Claude Code pipes a JSON blob describing the current session to the configured `statusLine.command` on every refresh. The script reads stdin, pulls out four fields, formats one line, and prints it. Full input schema lives in the [Claude Code docs](https://docs.claude.com/en/docs/claude-code/statusline).
+Claude Code pipes a JSON blob describing the current session to the configured `statusLine.command` on every refresh. The script reads stdin, pulls out nine fields, formats one line, and prints it. Full input schema lives in the [Claude Code docs](https://docs.claude.com/en/docs/claude-code/statusline).
 
 ## Customise
 
-The script is ~20 lines — fork it, change the format string, add git branch / model name / whatever. PRs welcome for genuinely useful additions; please keep it dependency-free.
+The script is ~90 lines — fork it, change the format string, add git branch / model name / whatever. PRs welcome for genuinely useful additions; please keep it dependency-free.
 
 ## License
 
