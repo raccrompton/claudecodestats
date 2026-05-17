@@ -2,6 +2,7 @@
 """Compact Claude Code status line: cost, context, and rate-limit usage."""
 import json
 import os
+import subprocess
 import sys
 
 
@@ -17,6 +18,22 @@ def _workdir(data):
 def repo(data):
     d = _workdir(data)
     return os.path.basename(d.rstrip("/")) if d else "-"
+
+
+def branch(data):
+    d = _workdir(data)
+    if not d:
+        return "-"
+    try:
+        result = subprocess.run(
+            ["git", "-C", d, "rev-parse", "--abbrev-ref", "HEAD"],
+            capture_output=True, text=True, timeout=1,
+        )
+    except Exception:
+        return "-"
+    if result.returncode != 0:
+        return "-"
+    return result.stdout.strip() or "-"
 
 
 def main():
