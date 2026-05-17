@@ -47,6 +47,44 @@ def test_duration():
     assert statusline.duration({}) == "0m"
 
 
+def test_main_end_to_end():
+    import io
+    import json
+
+    payload = {
+        "workspace": {"current_dir": "/home/u/my-repo"},
+        "model": {"display_name": "Claude Opus 4.7"},
+        "cost": {
+            "total_cost_usd": 0.42,
+            "total_lines_added": 120,
+            "total_lines_removed": 30,
+            "total_duration_ms": 64 * 60000,
+        },
+        "context_window": {"used_percentage": 37},
+        "rate_limits": {
+            "five_hour": {"used_percentage": 24},
+            "seven_day": {"used_percentage": 11},
+        },
+    }
+    old_stdin, old_stdout = sys.stdin, sys.stdout
+    sys.stdin = io.StringIO(json.dumps(payload))
+    sys.stdout = io.StringIO()
+    try:
+        statusline.main()
+        line = sys.stdout.getvalue().strip()
+    finally:
+        sys.stdin, sys.stdout = old_stdin, old_stdout
+    fields = line.split("  ")
+    assert fields[0] == "my-repo", fields
+    assert fields[2] == "opus-4.7", fields
+    assert fields[3] == "cost:$0.42", fields
+    assert fields[4] == "ctx:37%", fields
+    assert fields[5] == "+120/-30", fields
+    assert fields[6] == "1h4m", fields
+    assert fields[7] == "5h:24%", fields
+    assert fields[8] == "wk:11%", fields
+
+
 if __name__ == "__main__":
     failures = 0
     for name, fn in sorted(globals().items()):

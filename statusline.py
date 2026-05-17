@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compact Claude Code status line: cost, context, and rate-limit usage."""
+"""Compact Claude Code status line: identity, cost, context, diff, and rate-limit usage."""
 import json
 import os
 import re
@@ -66,15 +66,20 @@ def duration(data):
 def main():
     data = json.load(sys.stdin)
 
-    cost = data.get("cost", {}).get("total_cost_usd", 0)
-    ctx = data.get("context_window", {}).get("used_percentage", 0)
+    cost = (data.get("cost") or {}).get("total_cost_usd", 0) or 0
+    ctx = (data.get("context_window") or {}).get("used_percentage", 0) or 0
     limits = data.get("rate_limits") or {}
     five_hour = (limits.get("five_hour") or {}).get("used_percentage")
     seven_day = (limits.get("seven_day") or {}).get("used_percentage")
 
     parts = [
+        repo(data),
+        branch(data),
+        model(data),
         f"cost:${cost:.2f}",
         f"ctx:{ctx}%",
+        diff(data),
+        duration(data),
         f"5h:{pct(five_hour)}",
         f"wk:{pct(seven_day)}",
     ]
